@@ -1,0 +1,9 @@
+# Cargo stuff
+/target
+
+# Wasm files
+/dist/*
+!/dist/index.html
+
+# IDE meta
+.idea
