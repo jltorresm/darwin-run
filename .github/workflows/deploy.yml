@@ -8,7 +8,7 @@ on:
 env:
   CARGO_TERM_COLOR: always
   APP_NAME: darwin-run
-  OUT_DIR: dist
+  OUT_DIR_PATH: dist
 
 permissions:
   contents: read
@@ -39,15 +39,15 @@ jobs:
         run: cargo test && cargo build --release --target wasm32-unknown-unknown
       - name: WASM Bindgen for Web 🔧
         run: |
-          wasm-bindgen --out-name $APP_NAME \
-          --out-dir $OUT_DIR \
-          --target web target/wasm32-unknown-unknown/release/$APP_NAME.wasm
+          wasm-bindgen --out-name "$APP_NAME" \
+          --out-dir "$OUT_DIR_PATH" \
+          --target web "target/wasm32-unknown-unknown/release/$APP_NAME.wasm"
       - name: Copy Assets 🔍
-        run: cd $OUT_DIR && ln -sf ../assets ./
+        run: cd "$OUT_DIR_PATH" && ln -sf ../assets ./
       - name: Upload artifact 🌐
         uses: actions/upload-pages-artifact@v1
         with:
-          path: $OUT_DIR
+          path: "$OUT_DIR_PATH"
 
   deploy:
     needs: build
