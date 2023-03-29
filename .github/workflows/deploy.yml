@@ -1,0 +1,63 @@
+name: deploy
+
+on:
+  workflow_dispatch: # to be able to launch the workflow manually
+  push:
+    branches: [ main ]
+
+env:
+  CARGO_TERM_COLOR: always
+  APP_NAME: darwin-run
+  OUT_DIR: dist
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "deploy"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install rust toolchain 🦀
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: wasm32-unknown-unknown
+          override: true
+          profile: minimal
+      - name: Install Bevy's Ubuntu dependencies 📡
+        run: sudo apt-get install g++ pkg-config libx11-dev libasound2-dev libudev-dev lld
+      - name: Install cargo WASM bindgen CLI 🔗
+        run: cargo install wasm-bindgen-cli
+      - name: Run tests 🔬
+        run: cargo test
+      - name: Build for WASM 🔨
+        run: cargo build --release --target wasm32-unknown-unknown
+      - name: WASM Bindgen for Web 🔧
+        run: |
+          wasm-bindgen --out-name $APP_NAME 
+          --out-dir $OUT_DIR
+          --target web target/wasm32-unknown-unknown/release/$APP_NAME.wasm
+      - name: Copy Assets 🔍
+        run: cd $OUT_DIR && ln -sf ../assets ./
+      - name: Upload artifact 🌐
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: $OUT_DIR
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-22.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to Github Pages 🚀
+        id: deployment
+        uses: actions/deploy-pages@v1
