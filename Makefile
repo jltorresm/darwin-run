@@ -12,3 +12,4 @@ build-wasm:
 	wasm-bindgen --out-name $(APP_NAME) \
 		--out-dir dist \
 		--target web target/wasm32-unknown-unknown/release/$(APP_NAME).wasm
+	cd dist && ln -sf ../assets ./
