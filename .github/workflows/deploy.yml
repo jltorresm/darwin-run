@@ -35,14 +35,12 @@ jobs:
         run: sudo apt-get install g++ pkg-config libx11-dev libasound2-dev libudev-dev lld
       - name: Install cargo WASM bindgen CLI 🔗
         run: cargo install wasm-bindgen-cli
-      - name: Run tests 🔬
-        run: cargo test
-      - name: Build for WASM 🔨
-        run: cargo build --release --target wasm32-unknown-unknown
+      - name: Run tests 🔬 and Build for WASM 🔨
+        run: cargo test && cargo build --release --target wasm32-unknown-unknown
       - name: WASM Bindgen for Web 🔧
         run: |
-          wasm-bindgen --out-name $APP_NAME 
-          --out-dir $OUT_DIR
+          wasm-bindgen --out-name $APP_NAME \
+          --out-dir $OUT_DIR \
           --target web target/wasm32-unknown-unknown/release/$APP_NAME.wasm
       - name: Copy Assets 🔍
         run: cd $OUT_DIR && ln -sf ../assets ./
