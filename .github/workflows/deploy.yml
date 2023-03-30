@@ -43,7 +43,7 @@ jobs:
           --out-dir "$OUT_DIR_PATH" \
           --target web "target/wasm32-unknown-unknown/release/$APP_NAME.wasm"
       - name: Copy Assets 🔍
-        run: cd "$OUT_DIR_PATH" && ln -sf ../assets ./
+        run: cp -r ./assets "$OUT_DIR_PATH/"
       - name: Upload artifact 🌐
         uses: actions/upload-pages-artifact@v1
         with:
