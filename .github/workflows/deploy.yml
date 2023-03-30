@@ -47,7 +47,7 @@ jobs:
       - name: Upload artifact 🌐
         uses: actions/upload-pages-artifact@v1
         with:
-          path: "$OUT_DIR_PATH"
+          path: ${{ env.OUT_DIR_PATH }}
 
   deploy:
     needs: build
