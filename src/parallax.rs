@@ -26,7 +26,7 @@ pub fn init(app: &mut App) {
                 ..Default::default()
             },
             LayerData {
-                speed: LayerSpeed::Horizontal(0.1),
+                speed: LayerSpeed::Horizontal(0.0),
                 path: "tiles/grass2.png".to_string(),
                 tile_size: Vec2::new(16.0, 16.0),
                 scale: 4.0,

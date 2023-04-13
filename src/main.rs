@@ -13,6 +13,7 @@ fn main() {
     );
 
     lib::parallax::init(&mut app);
+    lib::player::init(&mut app);
 
     app.run();
 }
